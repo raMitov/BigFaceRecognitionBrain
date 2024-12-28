@@ -37,7 +37,14 @@ class App extends Component {
     console.log(event.target.value); 
   }
   onButtonSubmit = () => {
-    console.log('click');
+    this.setState();
+    fetch('http://localhost:3000/image', {
+      method: 'post',
+      headers: {'Content-Type' : 'application/json'},
+      body: JSON.stringify({
+        id: this.state.user.id
+      })
+    })
   }
   onRouteChange = (route) =>{
     if(route === 'signout'){
@@ -56,13 +63,18 @@ class App extends Component {
       { this.state.route === "home" ?
       <div>
       <Logo />
-       <Rank />
-       <ImageLinkForm onInputChange={this.onInputChange} onButtonSubmit={this.onButtonSubmit}/>
+       <Rank
+       name={this.state.user.name}
+       entries={this.state.user.entries}
+        />
+       <ImageLinkForm
+        onInputChange={this.onInputChange} 
+        onButtonSubmit={this.onButtonSubmit}/>
        </div>
        :(
         this.state.route === 'Signin' 
-        ? <Signin onRouteChange={this.onRouteChange} />
-        : <Register loadUser = {this.loadUser}onRouteChange={this.onRouteChange} />
+        ? <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
+        : <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
        ) 
       
        }
