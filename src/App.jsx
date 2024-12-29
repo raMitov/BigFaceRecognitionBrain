@@ -32,19 +32,25 @@ class App extends Component {
       entries: data.entries,
       joined: data.joined
   }})
-  }
-  onInputChange = (event) => {
-    console.log(event.target.value); 
-  }
+  } 
   onButtonSubmit = () => {
-    this.setState();
-    fetch('http://localhost:3000/image', {
-      method: 'post',
-      headers: {'Content-Type' : 'application/json'},
+    fetch('http://localhost:3000/button', {
+      method: 'PUT', // Correct method to match your backend
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         id: this.state.user.id
       })
     })
+    .then(response => response.json()) // Parse the response as JSON
+    .then(data => {
+      if (data.entries) {
+        this.setState(Object.assign(this.state.user, { entries: data.entries }));
+      } else {
+        console.error('Failed to update entries:', data);
+      }
+    })
+    .catch(error => console.error('Error:', error)); // Catch and log any errors
+    
   }
   onRouteChange = (route) =>{
     if(route === 'signout'){
@@ -68,7 +74,6 @@ class App extends Component {
        entries={this.state.user.entries}
         />
        <ImageLinkForm
-        onInputChange={this.onInputChange} 
         onButtonSubmit={this.onButtonSubmit}/>
        </div>
        :(
